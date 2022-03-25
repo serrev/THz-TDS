@@ -14,7 +14,7 @@
 % Cleaning everything before starts
 clc, clf, close all, clear all
 %%
-f_namedata = 'FePc-iz';
+f_namedata = 'Name';
 % Constants
 c_c = 299792458; % Light velocity
 c_e0 = 8.8541878128e-12;
@@ -32,8 +32,8 @@ v_fmin = 0.41e12;             % minimum value of interesting frequency domain
 v_fmax = 1.2e12;             % maximum value of interesting frequency domain
 %%
 % Files
-v_filenameRef = 'TDS_Air-backholder_277-282-0.05ps_6avg_100ms-20mV.dat'; % Insert file name for reference
-v_filenameSam = 'TDS_FePc-iz_264-278-0.05ps_17avg_100ms-20mV.dat'; % Insert file name for sample
+v_filenameRef = ''; % Insert file name for reference from Data files directory
+v_filenameSam = ''; % Insert file name for sample from Data file directory
 v_directory = strcat(pwd,'\Data_files\');
 f_FileEref = strcat(v_directory,v_filenameRef);
 f_FileEmod = strcat(v_directory,v_filenameSam);
@@ -99,7 +99,7 @@ title('Initial guess')
 legend('Real','Imag')
 
 %% Getting matrix of solutions
-% Refract matrix (triangular matrix, because yes... In principle the resolution is higher with less datapòints that one rectangular matrix)
+% Refract matrix (triangular matrix, because yes... In principle the resolution is higher with less datapÃ²ints that one rectangular matrix)
 % z = x + 1i*y; x:[xb,xe]; y:[yb,ye]; r: step
 v_xb = 1;
 v_xe = 4;
