@@ -3,11 +3,11 @@
 % 
 % Along time ago, in a code far, far away...
 
-% In this program we are using the scheeme of having a self-standing sample.
-% (Air|Air|Sample|Air|Air). It can be easily extend to a different scheeme 
+% In this program we are using the scheeme of having a sample sandwiched in two substrates.
+% (Air|Substrate|Sample|Substrate|Air). It can be easily extend to a different scheeme 
 
-% In this code: Sample means: Substrate+Air+Sample
-% In this code: Reference means: Air
+% In this code: Sample means: Substrate+Sample+Substrate
+% In this code: Reference means: Substrate+Air+Substrate
 
 % Developed by: Sergio Revuelta
 %%
