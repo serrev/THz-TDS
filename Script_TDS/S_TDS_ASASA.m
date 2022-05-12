@@ -3,10 +3,10 @@
 % 
 % Along time ago, in a code far, far away...
 
-% In this program we are using the scheeme of having a self-standing sample.
-% (Air|Air|Sample|Air|Air). It can be easily extend to a different scheeme 
+% In this program we are using the scheeme of having a substrate to measure.
+% (Air|Substrate|Air|Substrate|Air). It can be easily extend to a different scheeme 
 
-% In this code: Sample means: Substrate+Air+Sample
+% In this code: Sample means: Substrate+Air+Substrate
 % In this code: Reference means: Air
 
 % Developed by: Sergio Revuelta
