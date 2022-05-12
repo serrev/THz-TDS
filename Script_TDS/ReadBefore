@@ -1,5 +1,7 @@
 %% Important things  %%
 
+Developed with love by SerRev 
+
 In the script's name ->
 
 A -> Air
@@ -20,3 +22,12 @@ f_File* -> file
 lv_File* -> local file
 f_* -> MATLAB function
 lv_f -> Figure number
+
+---------------
+
+To measure the TDS of a free-standing sample, use code S_TDS_AASAA
+To measure the TDS of a sample inside two substrates, use firstly S_TDS_ASASA, then compute the script S_TDS_ASMSA loading the solutions of the substrate obained before
+
+--------------
+
+For any information regarding the code, free email can be send to ser.revuelta@gmail.com
