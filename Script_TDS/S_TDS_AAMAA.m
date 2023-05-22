@@ -55,8 +55,8 @@ a_TimeData=(0:v_Timestep:v_Timestep*(numel(a_Emod)-1))*1e12;
 a_Ereftime = a_Eref;
 a_Emodtime = a_Emod;
 % Cleaning the pulses
-a_Eref = f_hamming(v_Timestep,a_Eref);
-a_Emod = f_hamming(v_Timestep,a_Emod);
+% a_Eref = f_hamming(v_Timestep,a_Eref);
+% a_Emod = f_hamming(v_Timestep,a_Emod);
 %
 lv_f = lv_f + 1;
 figure(lv_f)
@@ -87,7 +87,8 @@ legend('Ref','Mod','Delta')
 
 % Retrieve initial refrac
 a_nreal = 1+(abs(abs(a_ModPhase)-abs(a_RefPhase)))./(2*pi*a_freq*v_d/c_c);
-a_nimag = -(c_c./(v_d*4*pi.*a_freq)).*log(a_ModAmpl./a_RefAmpl);
+a_R = ((1-a_nreal)/(1+a_nreal)).^2;
+a_nimag = -(c_c./(v_d*4*pi.*a_freq)).*log((a_ModAmpl*(1-a_R))./a_RefAmpl);					       
 a_z0 = a_nreal + 1i*a_nimag;
 
 lv_f = lv_f + 1;
@@ -97,7 +98,7 @@ title('Initial guess')
 legend('Real','Imag')
 
 %% Getting matrix of solutions
-% Refract matrix (triangular matrix, because yes... In principle the resolution is higher with less datapòints that one rectangular matrix)
+% Refract matrix (triangular matrix, because yes... In principle the resolution is higher with less datapÃ²ints that one rectangular matrix)
 % z = x + 1i*y; x:[xb,xe]; y:[yb,ye]; r: step
 v_xb = 1;
 v_xe = 4;
