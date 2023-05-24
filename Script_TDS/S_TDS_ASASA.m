@@ -17,6 +17,7 @@ clc, clf, close all, clear all
 f_namedata = 'Substrate';
 % Constants
 c_c = 299792458; % Light velocity
+c_e0 = 8.8541878128e-12;
 % Variables
 lv_f = 0;
 v_dsu = 1.06E-3; % Substrate thickness
@@ -28,8 +29,8 @@ v_fmin = 0.3e12;             % minimum value of interesting frequency domain
 v_fmax = 1.8e12;             % maximum value of interesting frequency domain
 %%
 % Files
-v_filenameRef = 'TDS_Air_143.5-169-0.05ps_6avg_100ms-50mV_20210721.dat'; % Insert file name for reference
-v_filenameSam = 'TDS_ReferenceSandwich_143.5-169-0.05ps_6avg_100ms-50mV20210721.dat'; % Insert file name for sample
+v_filenameRef = 'TDS_Air_20210427.dat'; % Insert file name for reference
+v_filenameSam = 'TDS_pType-0.3-0.5Ohmcm_20210427.dat'; % Insert file name for sample
 v_directory = strcat(pwd,'\Data_files\');
 f_FileEref = strcat(v_directory,v_filenameRef);
 f_FileEmod = strcat(v_directory,v_filenameSam);
@@ -85,7 +86,8 @@ legend('Ref','Mod','Delta')
 
 % Retrieve initial refrac
 a_nreal = 1+(abs(abs(a_ModPhase)-abs(a_RefPhase)))./(2*pi*a_freq*v_d/c_c);
-a_nimag = -(c_c./(v_d*4*pi.*a_freq)).*log(a_ModAmpl./a_RefAmpl);
+a_R = ((1-a_nreal)/(1+a_nreal)).^2;
+a_nimag = -(c_c./(v_d*4*pi.*a_freq)).*log((a_ModAmpl*(1-a_R))./a_RefAmpl);	
 a_z0 = a_nreal + 1i*a_nimag;
 
 lv_f = lv_f + 1;
