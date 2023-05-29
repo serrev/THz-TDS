@@ -39,7 +39,7 @@ lv_f -> Figure number
 
 ---------------
 
-To measure the TDS of a free-standing sample, use code S_TDS_AASAA
+To measure the TDS of a free-standing sample, use code S_TDS_AAMAA
 
 To measure the TDS of a sample inside two substrates, use firstly S_TDS_ASASA, then compute the script S_TDS_ASMSA loading the solutions of the substrate obained before
 
