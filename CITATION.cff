@@ -1,0 +1,34 @@
+# This CITATION.cff file was generated with cffinit.
+# Visit https://bit.ly/cffinit to generate yours today!
+
+cff-version: 1.2.0
+title: THz-TDS software
+message: >-
+  Software implemented to retrieve the complex refractive
+  index of a certain material in a Terahertz Time Domain
+  Spectroscopy setup
+type: software
+authors:
+  - given-names: Sergio
+    family-names: Revuelta
+    email: sergio.revuelta@imdea.org
+    affiliation: IMDEA Nanoscience
+    orcid: 'https://orcid.org/0000-0002-0238-1826'
+repository-code: 'https://github.com/serrev/THz-TDS'
+abstract: >-
+  THz Time-Domain Software for retrieving the refractive
+  index, permittivity and conductivity.
+
+
+  With an input of the measured THz electric fields its
+  possible to obtain the complex refractive index and the
+  the complex dark conductivity.
+
+
+  This code uses the Fresnel equations to generate the
+  transfer matrix of the measured electric fields.
+keywords:
+  - THz
+  - ' TDS'
+  - THz-TDS
+license: CC-BY-1.0
