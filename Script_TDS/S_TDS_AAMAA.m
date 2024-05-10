@@ -14,24 +14,24 @@
 % Cleaning everything before starts
 clc, clf, close all, clear all
 %%
-f_namedata = 'pType';
+f_namedata = '';
 % Constants
 c_c = 299792458; % Light velocity
 c_e0 = 8.8541878128e-12;
 % Variables
 lv_f = 0;
 % v_dsu = 1.06E-3; % Substrate thickness
-v_d = 0.305e-3; % Sample thickness. In this case will be the sample thickness between both subtrates
+v_d = 200e-6; % Sample thickness. In this case will be the sample thickness between both subtrates
 % v_dsar = v_dsas; % Sample thickness. In this case will be air thickness between both subtrates
 % v_d = v_dsas;
  
 % % Parameters
 v_fmin = 0.3e12;             % minimum value of interesting frequency domain
-v_fmax = 1.8e12;             % maximum value of interesting frequency domain
+v_fmax = 3e12;             % maximum value of interesting frequency domain
 %%
 % Files
-v_filenameRef = 'TDS_Air_20210427.dat'; % Insert file name for reference
-v_filenameSam = 'TDS_pType-0.3-0.5Ohmcm_20210427.dat'; % Insert file name for sample
+v_filenameRef = 'TDS_Reference.dat'; % Insert file name for reference
+v_filenameSam = 'TDS_Sample.dat'; % Insert file name for sample
 v_directory = strcat(pwd,'\Data_files\');
 f_FileEref = strcat(v_directory,v_filenameRef);
 f_FileEmod = strcat(v_directory,v_filenameSam);
@@ -39,8 +39,12 @@ f_FileEmod = strcat(v_directory,v_filenameSam);
 v_Timestep = 0.05E-12; % Timestep of the file
 
 % Reading the files
-a_fref = dlmread(f_FileEref,' ',13,0); 
-a_fmod = dlmread(f_FileEmod,' ',13,0); 
+% v_in2 = 40;
+% v_in = 330;
+% a_fref = dlmread(f_FileEref,' ',[v_in2 0 v_in 1]); 
+% a_fmod = dlmread(f_FileEmod,' ',[v_in2 0 v_in 1]); 
+a_fref = dlmread(f_FileEref,' ', 13, 0); 
+a_fmod = dlmread(f_FileEmod,' ', 13, 0); 
 a_Eref = a_fref(:,2);
 a_Emod = a_fmod(:,2);
 
@@ -49,24 +53,59 @@ a_Emod = (a_Emod - v_osm);               % Remove offset
 
 v_osr = 1/5*sum(a_Eref(1:5));        % Determine offset reference
 a_Eref = (a_Eref - v_osr);               % Remove offset
+%% Add offset and new values to the fields
+
+% v_maxnoiserefstart = max(a_Eref(1:5));
+% v_maxnoisemodstart = max(a_Emod(1:5));
+% 
+% v_maxnoiserefend = max(a_Eref(end-5:end));
+% v_maxnoisemodend = max(a_Emod(end-5:end));
+
+v_maxnoiserefstart = v_osr;
+v_maxnoisemodstart = v_osm;
+
+v_maxnoiserefend = v_osr;
+v_maxnoisemodend = v_osm;
+
+v_lengthofnewfields = 1000;
+
+v_values2addstart = round((v_lengthofnewfields - numel(a_Emod))/2);
+v_values2addend = 4*v_values2addstart;
+
+% a_offset2startref = -v_maxnoiserefstart + (v_maxnoiserefstart+v_maxnoiserefstart)*rand(v_values2addstart,1);
+% a_offset2startmod = -v_maxnoisemodstart + (v_maxnoisemodstart+v_maxnoisemodstart)*rand(v_values2addstart,1);
+
+a_offset2start = zeros(v_values2addstart,1);
+
+% a_offset2endref = -v_maxnoiserefend + (v_maxnoiserefend+v_maxnoiserefend)*rand(v_values2addend,1);
+% a_offset2endmod = -v_maxnoisemodend + (v_maxnoisemodend+v_maxnoisemodend)*rand(v_values2addend,1);
+
+a_offset2end = zeros(v_values2addend,1);
+
+a_Eref = reshape([a_offset2start' a_Eref' a_offset2end'].',[],1);
+a_Emod = reshape([a_offset2start' a_Emod' a_offset2end'].',[],1);
+% 
+% a_Eref = (a_Eref - v_osr); 
+% a_Emod = (a_Emod - v_osm); 
+
 %%
 %%%%%%%%%%%%%%%%%%%%%%% FFT
 a_TimeData=(0:v_Timestep:v_Timestep*(numel(a_Emod)-1))*1e12;
 a_Ereftime = a_Eref;
 a_Emodtime = a_Emod;
 % Cleaning the pulses
-% a_Eref = f_hamming(v_Timestep,a_Eref);
-% a_Emod = f_hamming(v_Timestep,a_Emod);
+a_Eref = f_hamming(v_Timestep,a_Eref);
+a_Emod = f_hamming(v_Timestep,a_Emod);
 %
 lv_f = lv_f + 1;
 figure(lv_f)
 plot(a_TimeData,real(a_Eref),a_TimeData,real(a_Emod))
 title('Pulses in TD')
 
-[a_RefFreq, a_RefAmpl, a_RefPhasebis] = my_fft(a_TimeData,a_Eref',v_fmin*1e-12,v_fmax*1e-12,pi);
+[a_RefFreq, a_RefAmpl, a_RefPhasebis] = my_fft(a_TimeData,a_Eref',v_fmin*1e-12,v_fmax*1e-12,pi/2);
 a_RefPhase = a_RefPhasebis;
 a_Eref=a_RefAmpl.*exp(1i*a_RefPhase);
-[a_ModFreq, a_ModAmpl, a_ModPhasebis] = my_fft(a_TimeData,a_Emod',v_fmin*1e-12,v_fmax*1e-12,pi);
+[a_ModFreq, a_ModAmpl, a_ModPhasebis] = my_fft(a_TimeData,a_Emod',v_fmin*1e-12,v_fmax*1e-12,pi/2);
 a_ModPhase = a_ModPhasebis;
 a_Emod=a_ModAmpl.*exp(1i.*a_ModPhase);
 
@@ -88,7 +127,8 @@ legend('Ref','Mod','Delta')
 % Retrieve initial refrac
 a_nreal = 1+(abs(abs(a_ModPhase)-abs(a_RefPhase)))./(2*pi*a_freq*v_d/c_c);
 a_R = ((1-a_nreal)/(1+a_nreal)).^2;
-a_nimag = -(c_c./(v_d*4*pi.*a_freq)).*log((a_ModAmpl*(1-a_R))./a_RefAmpl);					       
+% a_R = 0;
+a_nimag = -(c_c./(v_d*4*pi.*a_freq)).*log((a_ModAmpl*(1-a_R))./a_RefAmpl);	
 a_z0 = a_nreal + 1i*a_nimag;
 
 lv_f = lv_f + 1;
@@ -100,9 +140,9 @@ legend('Real','Imag')
 %% Getting matrix of solutions
 % Refract matrix (triangular matrix, because yes... In principle the resolution is higher with less datapòints that one rectangular matrix)
 % z = x + 1i*y; x:[xb,xe]; y:[yb,ye]; r: step
-v_xb = 1;
-v_xe = 4;
-v_yb = -3;
+v_xb = 1.1;
+v_xe = 2.2;
+v_yb = -1;
 v_ye = 0;
 
 v_r = 1e-3;
@@ -265,7 +305,7 @@ for lv_k = 1:length(a_freq)
 %     contourf(x,y,log10(m_diff))
 %     colorbar('southoutside');
 %     lv_freq = a_freq(lv_k)/1E12;
-% %     if lv_freq > 1
+%     if lv_freq > 1
 %         lv_freq = a_freq(lv_k)/1E12;
 %         lv_f = lv_f + 1;
 %         figure(lv_f)
@@ -273,7 +313,9 @@ for lv_k = 1:length(a_freq)
 %         view(2)
 %         colorbar('southoutside');
 %         title(sprintf('Frequency %dTHz',lv_freq))
-% %     end
+%         xlabel('Real part of refractive index')
+%         ylabel('Imaginary part of refractive index')
+%     end
     clc
     disp('-------------------------')
     disp('-------------------------')
@@ -304,7 +346,7 @@ a_diel = a_dielre + 1i.*a_dielim;
 % a_dielback = a_refracback^2;
 % a_cond = -1i.*((a_diel-a_dielback).*8.85E-12).*2*pi.*a_freq;
 
-v_permittinf = 12; %Silicon
+v_permittinf = 2.54; %Silicon
 a_recond = 2*real(a_sol).*imag(a_sol).*2*pi.*a_freq*c_e0;
 a_imcond = (v_permittinf-real(a_sol).^2+imag(a_sol).^2).*2*pi.*a_freq*c_e0;
 a_cond = a_recond + 1i.*a_imcond;
