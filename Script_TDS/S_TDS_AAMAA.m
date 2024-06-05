@@ -128,7 +128,7 @@ legend('Ref','Mod','Delta')
 a_nreal = 1+(abs(abs(a_ModPhase)-abs(a_RefPhase)))./(2*pi*a_freq*v_d/c_c);
 a_R = ((1-a_nreal)/(1+a_nreal)).^2;
 % a_R = 0;
-a_nimag = -(c_c./(v_d*4*pi.*a_freq)).*log((a_ModAmpl*(1-a_R))./a_RefAmpl);	
+a_nimag = -(c_c./(v_d*4*pi.*a_freq)).*log((a_ModAmpl/(1-a_R))./a_RefAmpl);	
 a_z0 = a_nreal + 1i*a_nimag;
 
 lv_f = lv_f + 1;
